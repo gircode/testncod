@@ -1,0 +1,50 @@
+# FastAPI相关
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+python-jose==3.3.0
+passlib==1.7.4
+pydantic==2.5.1
+pydantic-settings==2.1.0
+bcrypt==4.0.1
+email-validator==2.0.0.post2
+
+# 数据库相关
+SQLAlchemy==2.0.23
+asyncpg==0.29.0
+alembic==1.12.1
+psycopg2-binary==2.9.9
+
+# 缓存相关
+aioredis==2.0.1
+fastapi-cache2==0.2.1
+
+# 监控相关
+psutil==5.9.6
+httpx==0.24.0
+
+# 工具相关
+python-dotenv==1.0.0
+tenacity==8.2.2
+aiofiles==23.1.0
+orjson==3.8.10
+ujson==5.7.0
+
+# 日志相关
+loguru==0.7.0
+
+# 邮件相关
+fastapi-mail==1.4.1
+jinja2==3.1.2
+
+# 测试相关
+pytest==7.3.1
+pytest-asyncio==0.21.0
+pytest-cov==4.0.0
+httpx==0.24.0
+asgi-lifespan==2.1.0
+
+# 其他相关
+aiohttp==3.9.1
+virtualhere-api==0.1.0
+python-mac-vendor==0.1.0

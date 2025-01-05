@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}数据恢复管理 - NCOD{% endblock %}
+
+{% block breadcrumb %}
+<span>数据管理</span> / <span>数据恢复</span>
+{% endblock %}
+
+{% block content %}
+<div class="recovery-page">
+    <div class="page-header">
+        <h1>数据恢复管理</h1>
+        <div class="actions">
+            <button onclick="recoveryManager.createRecovery()" class="btn-primary">新建恢复</button>
+            <button onclick="recoveryManager.showBatchActions()" class="btn-secondary">批量操作</button>
+        </div>
+    </div>
+
+    <div class="recovery-overview">
+        <div class="overview-card">
+            <h3>恢复概览</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="label">总恢复任务</span>
+                    <span class="value">{{ stats.total_recoveries }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">成功率</span>
+                    <span class="value">{{ stats.success_rate }}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">平均耗时</span>
+                    <span class="value">{{ stats.avg_duration }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">最近恢复</span>
+                    <span class="value">{{ stats.last_recovery }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="overview-card">
+            <h3>可用备份点</h3>
+            <div class="backup-points">
+                <div class="timeline">
+                    {% for point in backup_points %}
+                    <div class="point {{ point.type }}">
+                        <div class="point-marker"></div>
+                        <div class="point-info">
+                            <span class="time">{{ point.time }}</span>
+                            <span class="type">{{ point.type }}</span>
+                            <span class="size">{{ point.size }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="recovery-list">
+        <div class="list-header">
+            <h2>恢复列表</h2>
+            <div class="list-filters">
+                <select id="sourceFilter" title="源备份筛选">
+                    <option value="all">所有备份</option>
+                    {% for backup in backups %}
+                    <option value="{{ backup.id }}">{{ backup.name }}</option>
+                    {% endfor %}
+                </select>
+                <select id="statusFilter" title="状态筛选">
+                    <option value="all">所有状态</option>
+                    <option value="running">运行中</option>
+                    <option value="completed">已完成</option>
+                    <option value="failed">失败</option>
+                </select>
+                <div class="date-range">
+                    <label>开始日期：</label>
+                    <input type="date" id="startDate" title="开始日期">
+                    <label>结束日期：</label>
+                    <input type="date" id="endDate" title="结束日期">
+                </div>
+            </div>
+        </div>
+
+        <div class="recovery-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" title="全选" onchange="recoveryManager.toggleSelectAll(this)"></th>
+                        <th>ID</th>
+                        <th>恢复名称</th>
+                        <th>源备份</th>
+                        <th>目标位置</th>
+                        <th>状态</th>
+                        <th>进度</th>
+                        <th>开始时间</th>
+                        <th>完成时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="recoveryTableBody">
+                    <!-- 恢复列表将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <!-- 分页控件将通过JavaScript动态加载 -->
+        </div>
+    </div>
+</div>
+
+<!-- 恢复配置对话框 -->
+<div id="recoveryDialog" class="modal">
+    <div class="modal-content">
+        <h3>恢复配置</h3>
+        <form id="recoveryForm">
+            <div class="form-group">
+                <label for="recoveryName">恢复名称</label>
+                <input type="text" id="recoveryName" name="name" required title="输入恢复名称">
+            </div>
+            <div class="form-group">
+                <label for="backupSource">源备份</label>
+                <select id="backupSource" name="backup_id" required title="选择源备份">
+                    {% for backup in backups %}
+                    <option value="{{ backup.id }}">{{ backup.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="recoveryPoint">恢复点</label>
+                <select id="recoveryPoint" name="point_id" required title="选择恢复点">
+                    <!-- 恢复点将根据选择的备份动态加载 -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="targetLocation">目标位置</label>
+                <select id="targetLocation" name="target_location" required title="选择目标位置">
+                    <option value="original">原位置</option>
+                    <option value="custom">自定义位置</option>
+                </select>
+            </div>
+            <div id="customLocationConfig" class="form-group custom-location hidden">
+                <label for="customPath">自定义路径</label>
+                <input type="text" id="customPath" name="custom_path" title="输入自定义路径">
+            </div>
+            <div class="form-group">
+                <label for="recoveryOptions">恢复选项</label>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="overwrite" value="1">
+                        覆盖已存在的文件
+                    </label>
+                    <label>
+                        <input type="checkbox" name="verify" value="1" checked>
+                        恢复后验证
+                    </label>
+                    <label>
+                        <input type="checkbox" name="keep_permissions" value="1" checked>
+                        保持原有权限
+                    </label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">开始恢复</button>
+                <button type="button" onclick="recoveryManager.closeRecoveryDialog()" class="btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/data/recovery.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/data/recovery.js') }}"></script>
+{% endblock %} 

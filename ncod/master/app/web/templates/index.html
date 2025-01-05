@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - NCOD{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">欢迎使用NCOD</h1>
+            <p class="lead">NCOD是一个网络设备管理系统，提供以下功能：</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- 设备管理 -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-hdd"></i> 设备管理
+                    </h5>
+                    <p class="card-text">管理网络设备，包括设备信息、状态监控、分组管理等。</p>
+                    <a href="{{ url_for('web.devices') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> 进入
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 监控中心 -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-chart-line"></i> 监控中心
+                    </h5>
+                    <p class="card-text">实时监控系统状态，包括CPU、内存、磁盘、网络等指标。</p>
+                    <a href="{{ url_for('web.monitor') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> 进入
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 仪表盘 -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-tachometer-alt"></i> 仪表盘
+                    </h5>
+                    <p class="card-text">查看系统概况，包括设备数量、告警信息、性能指标等。</p>
+                    <a href="{{ url_for('web.dashboard') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> 进入
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">系统信息</h5>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>版本</th>
+                                <td>1.0.0</td>
+                            </tr>
+                            <tr>
+                                <th>开发者</th>
+                                <td>Your Name</td>
+                            </tr>
+                            <tr>
+                                <th>联系方式</th>
+                                <td>your.email@example.com</td>
+                            </tr>
+                            <tr>
+                                <th>文档</th>
+                                <td>
+                                    <a href="#" target="_blank">
+                                        <i class="fas fa-book"></i> 查看文档
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

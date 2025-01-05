@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'ncod_master'
+    static_configs:
+      - targets: ['master:8000']
+  
+  - job_name: 'ncod_slave'
+    static_configs:
+      - targets: ['slave:9100'] 

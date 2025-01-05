@@ -1,0 +1,61 @@
+{
+    "database": {
+        "type": "postgresql",
+        "host": "localhost",
+        "port": 5432,
+        "database": "master_server",
+        "user": "master_user",
+        "password": "master_password",
+        "pool_size": 5,
+        "max_overflow": 10
+    },
+    "redis": {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0,
+        "password": null,
+        "session_ttl": 3600
+    },
+    "security": {
+        "jwt_secret": "your-secret-key",
+        "jwt_algorithm": "HS256",
+        "jwt_expiry_hours": 24,
+        "password_salt": "your-password-salt",
+        "ip_whitelist": [],
+        "max_login_attempts": 5,
+        "lockout_duration_minutes": 15,
+        "password_expiry_days": 90,
+        "min_password_length": 8,
+        "require_special_chars": true,
+        "require_numbers": true,
+        "require_uppercase": true,
+        "require_lowercase": true
+    },
+    "email": {
+        "smtp_server": "smtp.example.com",
+        "smtp_port": 587,
+        "smtp_user": "noreply@example.com",
+        "smtp_password": "your-smtp-password",
+        "use_tls": true,
+        "from_address": "noreply@example.com",
+        "from_name": "Master Server"
+    },
+    "logging": {
+        "level": "INFO",
+        "file_path": "logs/master_server.log",
+        "max_size_mb": 100,
+        "backup_count": 10,
+        "audit_log_path": "logs/audit.log",
+        "error_log_path": "logs/error.log"
+    },
+    "session": {
+        "cookie_name": "master_session",
+        "cookie_domain": null,
+        "cookie_path": "/",
+        "cookie_secure": true,
+        "cookie_httponly": true,
+        "cookie_samesite": "Lax",
+        "session_ttl": 3600,
+        "remember_me_ttl": 2592000
+    }
+} 

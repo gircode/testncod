@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NCOD 管理系统{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/base.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航 -->
+        <nav class="side-nav">
+            <div class="nav-header">
+                <img src="{{ url_for('static', path='images/logo.png') }}" alt="NCOD Logo" class="logo">
+                <h1>NCOD 系统</h1>
+            </div>
+            
+            <div class="nav-content">
+                <div class="nav-group">
+                    <h3>监控中心</h3>
+                    <a href="/" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                        <i class="icon-dashboard"></i>
+                        仪表盘
+                    </a>
+                    <a href="/monitor/nodes" class="nav-item {% if active_page == 'nodes' %}active{% endif %}">
+                        <i class="icon-nodes"></i>
+                        节点监控
+                    </a>
+                    <a href="/monitor/performance" class="nav-item {% if active_page == 'performance' %}active{% endif %}">
+                        <i class="icon-chart"></i>
+                        性能监控
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <h3>任务管理</h3>
+                    <a href="/tasks" class="nav-item {% if active_page == 'tasks' %}active{% endif %}">
+                        <i class="icon-tasks"></i>
+                        任务列表
+                    </a>
+                    <a href="/tasks/scheduler" class="nav-item {% if active_page == 'scheduler' %}active{% endif %}">
+                        <i class="icon-schedule"></i>
+                        调度管理
+                    </a>
+                    <a href="/tasks/history" class="nav-item {% if active_page == 'history' %}active{% endif %}">
+                        <i class="icon-history"></i>
+                        历史记录
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <h3>数据管理</h3>
+                    <a href="/data/sync" class="nav-item {% if active_page == 'sync' %}active{% endif %}">
+                        <i class="icon-sync"></i>
+                        数据同步
+                    </a>
+                    <a href="/data/backup" class="nav-item {% if active_page == 'backup' %}active{% endif %}">
+                        <i class="icon-backup"></i>
+                        数据备份
+                    </a>
+                    <a href="/data/recovery" class="nav-item {% if active_page == 'recovery' %}active{% endif %}">
+                        <i class="icon-recovery"></i>
+                        数据恢复
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <h3>系统管理</h3>
+                    <a href="/organization" class="nav-item {% if active_page == 'organization' %}active{% endif %}">
+                        <i class="icon-org"></i>
+                        组织架构
+                    </a>
+                    <a href="/users" class="nav-item {% if active_page == 'users' %}active{% endif %}">
+                        <i class="icon-users"></i>
+                        用户管理
+                    </a>
+                    <a href="/roles" class="nav-item {% if active_page == 'roles' %}active{% endif %}">
+                        <i class="icon-roles"></i>
+                        角色权限
+                    </a>
+                    <a href="/settings" class="nav-item {% if active_page == 'settings' %}active{% endif %}">
+                        <i class="icon-settings"></i>
+                        系统设置
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <h3>日志审计</h3>
+                    <a href="/logs/system" class="nav-item {% if active_page == 'system_logs' %}active{% endif %}">
+                        <i class="icon-logs"></i>
+                        系统日志
+                    </a>
+                    <a href="/logs/audit" class="nav-item {% if active_page == 'audit_logs' %}active{% endif %}">
+                        <i class="icon-audit"></i>
+                        审计日志
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 顶部栏 -->
+            <header class="top-bar">
+                <div class="breadcrumb">
+                    {% block breadcrumb %}{% endblock %}
+                </div>
+                <div class="user-menu">
+                    <span class="user-info">{{ username }}</span>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" title="用户菜单" aria-label="打开用户菜单">
+                            <i class="icon-user" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/profile">个人信息</a>
+                            <a href="/logout">退出登录</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 页面内容 -->
+            <main class="content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', path='js/base.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

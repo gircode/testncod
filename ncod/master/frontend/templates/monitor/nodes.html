@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}节点监控 - NCOD{% endblock %}
+
+{% block breadcrumb %}
+<span>监控中心</span> / <span>节点监控</span>
+{% endblock %}
+
+{% block content %}
+<div class="nodes-monitor">
+    <div class="page-header">
+        <h1>节点监控</h1>
+        <div class="actions">
+            <button class="btn-primary" onclick="refreshNodes()">刷新</button>
+            <button class="btn-secondary" onclick="showNodeFilters()">筛选</button>
+        </div>
+    </div>
+
+    <div class="nodes-grid">
+        <!-- 节点列表将通过JavaScript动态加载 -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/monitor/nodes.js') }}"></script>
+{% endblock %} 

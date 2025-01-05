@@ -1,0 +1,235 @@
+/* 基础布局 */
+.app-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+}
+
+/* 侧边导航 */
+.side-nav {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.nav-header {
+    padding: 0 20px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+}
+
+.nav-group {
+    margin-bottom: 20px;
+}
+
+.nav-group h3 {
+    padding: 0 20px;
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #ccc;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background: #2a2a2a;
+}
+
+.nav-item.active {
+    background: #2196F3;
+    color: white;
+}
+
+.nav-item i {
+    font-size: 1.2em;
+}
+
+/* 主内容区 */
+.main-content {
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部栏 */
+.top-bar {
+    background: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.breadcrumb {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-width: 150px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f5f5f5;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* 内容区 */
+.content {
+    padding: 30px;
+    flex: 1;
+}
+
+/* 图标 */
+[class^="icon-"] {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon-dashboard { background-image: url('../images/icons/dashboard.svg'); }
+.icon-nodes { background-image: url('../images/icons/nodes.svg'); }
+.icon-chart { background-image: url('../images/icons/chart.svg'); }
+.icon-tasks { background-image: url('../images/icons/tasks.svg'); }
+.icon-schedule { background-image: url('../images/icons/schedule.svg'); }
+.icon-history { background-image: url('../images/icons/history.svg'); }
+.icon-sync { background-image: url('../images/icons/sync.svg'); }
+.icon-backup { background-image: url('../images/icons/backup.svg'); }
+.icon-recovery { background-image: url('../images/icons/recovery.svg'); }
+.icon-org { background-image: url('../images/icons/org.svg'); }
+.icon-users { background-image: url('../images/icons/users.svg'); }
+.icon-roles { background-image: url('../images/icons/roles.svg'); }
+.icon-settings { background-image: url('../images/icons/settings.svg'); }
+.icon-logs { background-image: url('../images/icons/logs.svg'); }
+.icon-audit { background-image: url('../images/icons/audit.svg'); }
+.icon-user { background-image: url('../images/icons/user.svg'); }
+
+/* 添加进度条样式 */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: #2196F3;
+    transition: width 0.2s ease-out;
+    z-index: 9999;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+
+    .side-nav {
+        position: fixed;
+        left: -250px;
+        top: 0;
+        bottom: 0;
+        transition: left 0.3s ease;
+        z-index: 1000;
+    }
+
+    .side-nav.active {
+        left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+/* 动画效果 */
+.dropdown-menu {
+    transform-origin: top right;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    pointer-events: none;
+}
+
+.dropdown-menu.show {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 无障碍支持 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* 焦点样式 */
+:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: 2px;
+}
+
+/* 键盘导航支持 */
+.nav-item:focus-visible {
+    background: #2a2a2a;
+    outline: 2px solid #2196F3;
+    outline-offset: -2px;
+} 

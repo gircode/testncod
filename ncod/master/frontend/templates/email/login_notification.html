@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新的登录活动</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .content {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #4a90e2;
+        }
+        .info-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e5e7eb;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        .info-value {
+            color: #111;
+            font-weight: 600;
+        }
+        .security-tips {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .security-tips h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .footer {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #dc2626;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .content {
+                padding: 15px;
+            }
+            .info-item {
+                flex-direction: column;
+            }
+            .info-value {
+                margin-top: 5px;
+            }
+            .button {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>新的登录活动</h1>
+    </div>
+    
+    <div class="content">
+        <p>尊敬的 {{ username }}：</p>
+        
+        <p>我们检测到您的账户有新的登录活动。如果这是您本人的操作，您可以忽略此邮件。</p>
+        
+        <div class="info-box">
+            <div class="info-item">
+                <span class="info-label">登录时间：</span>
+                <span class="info-value">{{ login_time }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">IP地址：</span>
+                <span class="info-value">{{ ip_address }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">位置：</span>
+                <span class="info-value">{{ location }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">设备：</span>
+                <span class="info-value">{{ user_agent }}</span>
+            </div>
+        </div>
+        
+        <p>如果您没有进行此次登录，这可能意味着您的账户安全已经受到威胁。</p>
+        
+        <p style="text-align: center;">
+            <a href="#" class="button">这不是我的登录</a>
+        </p>
+        
+        <div class="security-tips">
+            <h3>安全建议</h3>
+            <ul>
+                <li>立即更改您的密码</li>
+                <li>启用双因素认证</li>
+                <li>检查您的账户活动记录</li>
+                <li>确保您的邮箱账户安全</li>
+                <li>不要在不信任的设备上登录</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>此邮件由系统自动发送，请勿回复。</p>
+        <p>如果您需要帮助，请联系系统管理员。</p>
+        <p>© 2024 Master Server. All rights reserved.</p>
+    </div>
+</body>
+</html> 

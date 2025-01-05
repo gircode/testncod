@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加密锁管理-后台管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/login.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>加密锁管理-后台管理</h1>
+        <form id="loginForm" method="post" action="/api/auth/login">
+            <div class="input-group">
+                <span class="icon user-icon"></span>
+                <input type="text" id="username" name="username" placeholder="用户名" required>
+            </div>
+            <div class="input-group">
+                <span class="icon password-icon"></span>
+                <input type="password" id="password" name="password" placeholder="密码" required>
+            </div>
+            <div class="captcha-group">
+                <div class="captcha-image">
+                    <img id="captchaImage" src="/api/auth/captcha" alt="验证码">
+                    <button type="button" id="refreshCaptcha" class="refresh-btn">刷新</button>
+                </div>
+                <input type="text" id="captcha" name="captcha" placeholder="请输入计算结果" required>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+            <button type="submit" class="login-btn">登录</button>
+        </form>
+        <div class="bottom-links">
+            <a href="/register">注册新用户</a>
+            <a href="/download">下载客户端</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='/js/login.js') }}"></script>
+</body>
+</html> 

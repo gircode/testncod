@@ -1,0 +1,247 @@
+/* 节点监控页面样式 */
+.nodes-monitor {
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* 节点网格布局 */
+.nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+/* 节点卡片样式 */
+.node-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.node-card.active {
+    border-left: 4px solid #4CAF50;
+}
+
+.node-card.error {
+    border-left: 4px solid #f44336;
+}
+
+.node-card.warning {
+    border-left: 4px solid #ff9800;
+}
+
+.node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.node-type {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    background: #e0e0e0;
+}
+
+/* 性能统计 */
+.node-stats {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stat {
+    display: grid;
+    gap: 5px;
+}
+
+.stat .label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.progress {
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #2196F3;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-bar::after {
+    content: attr(style);
+    position: absolute;
+    right: 5px;
+    top: -18px;
+    font-size: 0.8em;
+}
+
+/* 节点信息 */
+.node-info {
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.node-info p {
+    margin: 5px 0;
+}
+
+/* 节点操作 */
+.node-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* 详情模态框 */
+.node-details {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+}
+
+.detail-section h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detail-table td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-table td:first-child {
+    width: 120px;
+    color: #666;
+}
+
+/* 性能图表 */
+.performance-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.chart {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 日志查看器 */
+.log-viewer {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-viewer pre {
+    margin: 0;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* 诊断信息 */
+.troubleshoot-info {
+    max-width: 600px;
+}
+
+.diagnosis-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.issue {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+
+.issue.critical {
+    border-left: 4px solid #f44336;
+}
+
+.issue.warning {
+    border-left: 4px solid #ff9800;
+}
+
+.issue.info {
+    border-left: 4px solid #2196F3;
+}
+
+.issue-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.issue-description {
+    color: #666;
+    margin: 5px 0;
+}
+
+.issue-solution {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.diagnosis-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .nodes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .performance-charts {
+        grid-template-columns: 1fr;
+    }
+
+    .node-actions {
+        flex-direction: column;
+    }
+
+    .node-actions button {
+        width: 100%;
+    }
+} 

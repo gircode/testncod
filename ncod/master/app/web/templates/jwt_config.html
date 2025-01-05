@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Configuration</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold mb-6">JWT Configuration</h1>
+            
+            <div class="space-y-4">
+                <!-- 算法信息 -->
+                <div class="bg-gray-50 p-4 rounded">
+                    <h2 class="font-semibold text-lg mb-2">Algorithm</h2>
+                    <p class="text-gray-700">{{ config.algorithm }}</p>
+                </div>
+                
+                <!-- 令牌过期时间 -->
+                <div class="bg-gray-50 p-4 rounded">
+                    <h2 class="font-semibold text-lg mb-2">Token Expiration</h2>
+                    <div class="space-y-2">
+                        <p class="text-gray-700">
+                            Access Token: {{ config.access_token_expire_minutes }} minutes
+                        </p>
+                        <p class="text-gray-700">
+                            Refresh Token: {{ config.refresh_token_expire_days }} days
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 密钥信息 -->
+                <div class="bg-gray-50 p-4 rounded">
+                    <h2 class="font-semibold text-lg mb-2">Secret Key Configuration</h2>
+                    <p class="text-gray-700">
+                        Source: 
+                        {% if config.secret_key_source == "environment" %}
+                            <span class="text-green-600">Environment Variable</span>
+                        {% else %}
+                            <span class="text-blue-600">Configuration File</span>
+                        {% endif %}
+                    </p>
+                    <p class="text-sm text-gray-500 mt-2">
+                        Note: The secret key is securely stored and will persist across application restarts.
+                    </p>
+                </div>
+                
+                <!-- 安全提示 -->
+                <div class="bg-yellow-50 p-4 rounded border border-yellow-200">
+                    <h2 class="font-semibold text-lg mb-2 text-yellow-800">Security Notes</h2>
+                    <ul class="list-disc list-inside space-y-1 text-yellow-700">
+                        <li>The JWT secret key is never exposed in the frontend</li>
+                        <li>Access tokens expire after {{ config.access_token_expire_minutes }} minutes</li>
+                        <li>Use refresh tokens to obtain new access tokens</li>
+                        <li>Store tokens securely in your application</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

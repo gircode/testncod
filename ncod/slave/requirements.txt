@@ -1,0 +1,39 @@
+# FastAPI相关
+fastapi==0.95.1
+uvicorn==0.21.1
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+pydantic==1.10.7
+email-validator==2.0.0.post2
+
+# 数据库相关
+SQLAlchemy==2.0.9
+asyncpg==0.27.0
+alembic==1.10.3
+psycopg2-binary==2.9.6
+
+# 缓存相关
+aioredis==2.0.1
+fastapi-cache2==0.2.1
+
+# 监控相关
+psutil==5.9.5
+httpx==0.24.0
+
+# 工具相关
+python-dotenv==1.0.0
+tenacity==8.2.2
+aiofiles==23.1.0
+orjson==3.8.10
+ujson==5.7.0
+
+# 日志相关
+loguru==0.7.0
+
+# 测试相关
+pytest==7.3.1
+pytest-asyncio==0.21.0
+pytest-cov==4.0.0
+httpx==0.24.0
+asgi-lifespan==2.1.0 

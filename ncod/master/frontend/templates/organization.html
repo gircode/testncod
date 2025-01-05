@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCOD 组织架构管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/organization.css') }}">
+</head>
+<body>
+    <div class="org-page">
+        <header>
+            <h1>组织架构管理</h1>
+            <div class="header-controls">
+                <button onclick="addDepartment()" class="btn-primary">添加部门</button>
+                <button onclick="addPipeline()" class="btn-primary">添加管线</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="org-layout">
+                <!-- 部门树形结构 -->
+                <section class="department-tree">
+                    <h2>部门结构</h2>
+                    <div class="tree-container" id="departmentTree">
+                        {% for dept in departments %}
+                        <div class="tree-node dept-node" data-id="{{ dept.id }}">
+                            <div class="node-content">
+                                <span class="node-name">{{ dept.name }}</span>
+                                <div class="node-actions">
+                                    <button onclick="editDepartment('{{ dept.id }}')" class="btn-small">编辑</button>
+                                    <button onclick="deleteDepartment('{{ dept.id }}')" class="btn-small btn-danger">删除</button>
+                                </div>
+                            </div>
+                            {% if dept.children %}
+                            <div class="node-children">
+                                {% for child in dept.children %}
+                                <!-- 递归显示子部门 -->
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- 管线配置 -->
+                <section class="pipeline-config">
+                    <h2>管线配置</h2>
+                    <div class="pipeline-list">
+                        {% for pipeline in pipelines %}
+                        <div class="pipeline-item" data-id="{{ pipeline.id }}">
+                            <div class="pipeline-header">
+                                <h3>{{ pipeline.name }}</h3>
+                                <div class="pipeline-actions">
+                                    <button onclick="editPipeline('{{ pipeline.id }}')" class="btn-small">编辑</button>
+                                    <button onclick="deletePipeline('{{ pipeline.id }}')" class="btn-small btn-danger">删除</button>
+                                </div>
+                            </div>
+                            <div class="pipeline-details">
+                                <div class="pipeline-info">
+                                    <p>状态: <span class="status {{ pipeline.status }}">{{ pipeline.status }}</span></p>
+                                    <p>所属部门: {{ pipeline.department }}</p>
+                                    <p>创建时间: {{ pipeline.created_at }}</p>
+                                </div>
+                                <div class="pipeline-nodes">
+                                    <h4>节点配置</h4>
+                                    <div class="node-list">
+                                        {% for node in pipeline.nodes %}
+                                        <div class="node-item">
+                                            <span class="node-type">{{ node.type }}</span>
+                                            <span class="node-address">{{ node.address }}</span>
+                                            <span class="node-status {{ node.status }}">{{ node.status }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- 部门编辑对话框 -->
+    <div id="departmentDialog" class="modal">
+        <div class="modal-content">
+            <h3>部门信息</h3>
+            <form id="departmentForm">
+                <div class="form-group">
+                    <label for="deptName">部门名称</label>
+                    <input type="text" id="deptName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="parentDept">上级部门</label>
+                    <select id="parentDept" name="parent_id">
+                        <option value="">无</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept.id }}">{{ dept.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">保存</button>
+                    <button type="button" onclick="closeDepartmentDialog()" class="btn-secondary">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 管线编辑对话框 -->
+    <div id="pipelineDialog" class="modal">
+        <div class="modal-content">
+            <h3>管线配置</h3>
+            <form id="pipelineForm">
+                <div class="form-group">
+                    <label for="pipelineName">管线名称</label>
+                    <input type="text" id="pipelineName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="pipelineDept">所属部门</label>
+                    <select id="pipelineDept" name="department_id" required>
+                        {% for dept in departments %}
+                        <option value="{{ dept.id }}">{{ dept.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>节点配置</label>
+                    <div id="nodeList" class="node-config-list">
+                        <!-- 动态添加的节点配置 -->
+                    </div>
+                    <button type="button" onclick="addNode()" class="btn-secondary">添加节点</button>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">保存</button>
+                    <button type="button" onclick="closePipelineDialog()" class="btn-secondary">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', path='js/organization.js') }}"></script>
+</body>
+</html> 

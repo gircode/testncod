@@ -1,0 +1,16 @@
+{
+    "metrics": [
+        {
+            "id": 1,
+            "name": "CPU Usage",
+            "value": 45.2,
+            "unit": "%"
+        },
+        {
+            "id": 2,
+            "name": "Memory Usage",
+            "value": 2048,
+            "unit": "MB"
+        }
+    ]
+}

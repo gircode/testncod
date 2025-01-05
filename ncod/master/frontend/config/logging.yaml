@@ -1,0 +1,104 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  
+  json:
+    class: utils.logger.JSONFormatter
+    format: "%(asctime)s %(name)s %(levelname)s %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+
+  file:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: /var/log/ncod/master/app.log
+    when: midnight
+    interval: 1
+    backupCount: 30
+    encoding: utf8
+
+  error_file:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: json
+    filename: /var/log/ncod/master/error.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 20
+    encoding: utf8
+
+  access_log:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: /var/log/ncod/master/access.log
+    when: midnight
+    interval: 1
+    backupCount: 30
+    encoding: utf8
+
+  audit_log:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: /var/log/ncod/master/audit.log
+    when: midnight
+    interval: 1
+    backupCount: 90
+    encoding: utf8
+
+loggers:
+  root:
+    level: INFO
+    handlers: [console, file, error_file]
+    propagate: no
+
+  uvicorn:
+    level: INFO
+    handlers: [console, file]
+    propagate: no
+
+  uvicorn.access:
+    level: INFO
+    handlers: [access_log]
+    propagate: no
+
+  sqlalchemy:
+    level: WARNING
+    handlers: [console, file, error_file]
+    propagate: no
+
+  alembic:
+    level: INFO
+    handlers: [console, file]
+    propagate: no
+
+  auth:
+    level: INFO
+    handlers: [console, file, audit_log]
+    propagate: no
+
+  device:
+    level: INFO
+    handlers: [console, file, error_file]
+    propagate: no
+
+  task:
+    level: INFO
+    handlers: [console, file, error_file]
+    propagate: no
+
+  websocket:
+    level: INFO
+    handlers: [console, file]
+    propagate: no 

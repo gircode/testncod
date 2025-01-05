@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}任务管理 - NCOD{% endblock %}
+
+{% block breadcrumb %}
+<span>任务管理</span> / <span>任务列表</span>
+{% endblock %}
+
+{% block content %}
+<div class="tasks-page">
+    <div class="page-header">
+        <h1>任务管理</h1>
+        <div class="actions">
+            <button onclick="taskManager.createTask()" class="btn-primary">新建任务</button>
+            <button onclick="taskManager.showBatchActions()" class="btn-secondary">批量操作</button>
+            <div class="search-box">
+                <input type="text" placeholder="搜索任务..." onkeyup="taskManager.searchTasks(this.value)">
+            </div>
+        </div>
+    </div>
+
+    <div class="task-filters">
+        <select id="taskType" name="type" title="任务类型筛选">
+            <option value="all">所有类型</option>
+            <option value="sync">同步任务</option>
+            <option value="backup">备份任务</option>
+        </select>
+        <select id="taskStatus" name="status" title="任务状态筛选">
+            <option value="all">所有状态</option>
+            <option value="pending">等待中</option>
+            <option value="running">运行中</option>
+        </select>
+        <div class="date-range">
+            <input type="date" id="startDate" name="start_date" title="开始日期">
+            <span>至</span>
+            <input type="date" id="endDate" name="end_date" title="结束日期">
+        </div>
+    </div>
+
+    <div class="tasks-table">
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll" title="全选" onchange="taskManager.toggleSelectAll(this)"></th>
+                    <th>任务ID</th>
+                    <th>任务名称</th>
+                    <th>类型</th>
+                    <th>状态</th>
+                    <th>进度</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="tasksTableBody">
+                <!-- 任务列表将通过JavaScript动态加载 -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <!-- 分页控件将通过JavaScript动态加载 -->
+    </div>
+</div>
+
+<!-- 任务创建/编辑对话框 -->
+<div id="taskDialog" class="modal">
+    <div class="modal-content">
+        <h3>任务配置</h3>
+        <form id="taskForm">
+            <div class="form-group">
+                <label for="taskName">任务名称</label>
+                <input type="text" id="taskName" name="name" required title="输入任务名称">
+            </div>
+            <div class="form-group">
+                <label for="taskType">任务类型</label>
+                <select id="taskType" name="type" required title="选择任务类型">
+                    <option value="sync">数据同步</option>
+                    <option value="backup">数据备份</option>
+                    <option value="check">系统检查</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="scheduleType">执行计划</label>
+                <select id="scheduleType" name="schedule_type" required title="选择执行计划" onchange="taskManager.toggleScheduleOptions(this.value)">
+                    <option value="immediate">立即执行</option>
+                    <option value="once">定时执行</option>
+                    <option value="recurring">周期执行</option>
+                </select>
+            </div>
+            <div id="scheduleOptions" class="schedule-options hidden">
+                <!-- 调度选项将根据选择动态显示 -->
+            </div>
+            <div class="form-group">
+                <label for="taskParams">任务参数</label>
+                <textarea id="taskParams" name="parameters" rows="4" title="输入任务参数"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">保存</button>
+                <button type="button" onclick="taskManager.closeTaskDialog()" class="btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="customQueryConfig" class="custom-query hidden">
+    <!-- 自定义查询配置 -->
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tasks/list.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/tasks/list.js') }}"></script>
+{% endblock %} 

@@ -1,0 +1,221 @@
+/* 基础布局 */
+.org-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 头部样式 */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-controls {
+    display: flex;
+    gap: 15px;
+}
+
+/* 主布局 */
+.org-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+}
+
+/* 部门树形结构 */
+.department-tree {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tree-node {
+    margin: 10px 0;
+    padding-left: 20px;
+    border-left: 2px solid #eee;
+}
+
+.node-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.node-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.node-children {
+    margin-left: 20px;
+}
+
+/* 管线配置 */
+.pipeline-config {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pipeline-item {
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.pipeline-details {
+    padding: 15px;
+}
+
+.pipeline-info {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.node-list {
+    display: grid;
+    gap: 10px;
+}
+
+.node-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* 状态样式 */
+.status {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+}
+
+.status.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.status.inactive {
+    background: #f44336;
+    color: white;
+}
+
+.status.pending {
+    background: #ffd700;
+    color: black;
+}
+
+/* 对话框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #757575;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+}
+
+.btn-small {
+    padding: 4px 8px;
+    font-size: 0.85em;
+}
+
+/* 节点配置列表 */
+.node-config-list {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.node-config-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+} 

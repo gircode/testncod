@@ -1,0 +1,16 @@
+{
+    "devices": [
+        {
+            "id": 1,
+            "name": "Device 1",
+            "status": "online",
+            "type": "sensor"
+        },
+        {
+            "id": 2,
+            "name": "Device 2",
+            "status": "offline",
+            "type": "controller"
+        }
+    ]
+}

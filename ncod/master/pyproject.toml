@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ncod"
+version = "0.1.0"
+description = "NCOD Project"
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi",
+    "sqlalchemy",
+    "pydantic",
+    "python-multipart",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "python-dotenv",
+]
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["app"]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    ".",
+    "app"
+]
+
+[tool.pylance]
+python.analysis.extraPaths = [
+    ".",
+    "app"
+]
+
+[tool.pyright]
+include = ["."]
+extraPaths = ["."]
+pythonPath = "python"
+pythonVersion = "3.8"
+typeCheckingMode = "basic"
+useLibraryCodeForTypes = true 

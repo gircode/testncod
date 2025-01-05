@@ -1,0 +1,179 @@
+/* 全局样式 */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --background-color: #f5f6fa;
+    --text-color: #2c3e50;
+    --border-color: #dcdde1;
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+    --danger-color: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* 仪表盘容器 */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+}
+
+/* 导航菜单 */
+.nav-menu {
+    background-color: var(--secondary-color);
+    padding: 1rem;
+    position: fixed;
+    height: 100vh;
+    width: 250px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-list a {
+    color: white;
+    text-decoration: none;
+    padding: 0.8rem 1rem;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.menu-list a:hover,
+.menu-list a.active {
+    background-color: var(--primary-color);
+}
+
+/* 主内容区 */
+.main-content {
+    padding: 2rem;
+    margin-left: 250px;
+}
+
+.dashboard-section {
+    margin-bottom: 2rem;
+}
+
+h1, h2, h3 {
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+/* 指标卡片 */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.metric-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 图表容器 */
+.chart-container {
+    width: 100%;
+    height: 300px;
+    margin: 1rem 0;
+}
+
+/* 表单元素 */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input[type="number"],
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn.primary:hover {
+    background-color: #2980b9;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        transition: left 0.3s;
+        z-index: 1000;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1001;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding-top: 4rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+} 

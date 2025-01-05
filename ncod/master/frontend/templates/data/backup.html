@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}数据备份管理 - NCOD{% endblock %}
+
+{% block breadcrumb %}
+<span>数据管理</span> / <span>数据备份</span>
+{% endblock %}
+
+{% block content %}
+<div class="backup-page">
+    <div class="page-header">
+        <h1>数据备份管理</h1>
+        <div class="actions">
+            <button onclick="backupManager.createBackup()" class="btn-primary">新建备份</button>
+            <button onclick="backupManager.showBatchActions()" class="btn-secondary">批量操作</button>
+        </div>
+    </div>
+
+    <div class="backup-overview">
+        <div class="overview-card">
+            <h3>备份概览</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="label">总备份数</span>
+                    <span class="value">{{ stats.total_backups }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">总数据量</span>
+                    <span class="value">{{ stats.total_size }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">最近备份</span>
+                    <span class="value">{{ stats.last_backup }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">成功率</span>
+                    <span class="value">{{ stats.success_rate }}%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="overview-card">
+            <h3>存储使用</h3>
+            <div class="storage-info">
+                <div class="storage-progress">
+                    <div class="progress-ring">
+                        <svg viewBox="0 0 36 36">
+                            <path d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke="#eee"
+                                stroke-width="2"
+                            />
+                            <path d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke="#2196F3"
+                                stroke-width="2"
+                                stroke-dasharray="{{ stats.storage_usage }}, 100"
+                            />
+                        </svg>
+                        <div class="progress-text">{{ stats.storage_usage }}%</div>
+                    </div>
+                    <div class="storage-details">
+                        <div class="detail-item">
+                            <span class="label">已用空间</span>
+                            <span class="value">{{ stats.used_space }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">可用空间</span>
+                            <span class="value">{{ stats.free_space }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">总空间</span>
+                            <span class="value">{{ stats.total_space }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="backup-list">
+        <div class="list-header">
+            <h2>备份列表</h2>
+            <div class="list-filters">
+                <select id="typeFilter" title="备份类型筛选">
+                    <option value="all">所有类型</option>
+                    <option value="full">全量备份</option>
+                    <option value="incremental">增量备份</option>
+                    <option value="differential">差异备份</option>
+                </select>
+                <select id="statusFilter" title="状态筛选">
+                    <option value="all">所有状态</option>
+                    <option value="running">运行中</option>
+                    <option value="completed">已完成</option>
+                    <option value="failed">失败</option>
+                </select>
+                <div class="date-range">
+                    <label>开始日期：</label>
+                    <input type="date" id="startDate" title="开始日期">
+                    <label>结束日期：</label>
+                    <input type="date" id="endDate" title="结束日期">
+                </div>
+            </div>
+        </div>
+
+        <div class="backup-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" title="全选" onchange="backupManager.toggleSelectAll(this)"></th>
+                        <th>ID</th>
+                        <th>备份名称</th>
+                        <th>类型</th>
+                        <th>大小</th>
+                        <th>状态</th>
+                        <th>进度</th>
+                        <th>开始时间</th>
+                        <th>完成时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="backupTableBody">
+                    <!-- 备份列表将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <!-- 分页控件将通过JavaScript动态加载 -->
+        </div>
+    </div>
+</div>
+
+<!-- 备份配置对话框 -->
+<div id="backupDialog" class="modal">
+    <div class="modal-content">
+        <h3>备份配置</h3>
+        <form id="backupForm">
+            <div class="form-group">
+                <label for="backupName">备份名称</label>
+                <input type="text" id="backupName" name="name" required title="输入备份名称">
+            </div>
+            <div class="form-group">
+                <label for="backupType">备份类型</label>
+                <select id="backupType" name="type" required title="选择备份类型">
+                    <option value="full">全量备份</option>
+                    <option value="incremental">增量备份</option>
+                    <option value="differential">差异备份</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="backupSource">备份源</label>
+                <select id="backupSource" name="source" required title="选择备份源">
+                    {% for source in backup_sources %}
+                    <option value="{{ source.id }}">{{ source.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="compression">压缩级别</label>
+                <select id="compression" name="compression" required title="选择压缩级别">
+                    <option value="none">不压缩</option>
+                    <option value="low">低压缩</option>
+                    <option value="medium">中等压缩</option>
+                    <option value="high">高压缩</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="encryption">加密方式</label>
+                <select id="encryption" name="encryption" required title="选择加密方式">
+                    <option value="none">不加密</option>
+                    <option value="aes-256">AES-256</option>
+                    <option value="aes-128">AES-128</option>
+                </select>
+            </div>
+            <div id="encryptionKey" class="form-group encryption-key hidden">
+                <label for="key">加密密钥</label>
+                <input type="password" id="key" name="key" title="输入加密密钥">
+            </div>
+            <div class="form-group">
+                <label for="schedule">执行计划</label>
+                <select id="schedule" name="schedule" required title="选择执行计划">
+                    <option value="immediate">立即执行</option>
+                    <option value="scheduled">定时执行</option>
+                    <option value="recurring">周期执行</option>
+                </select>
+            </div>
+            <div id="scheduleConfig" class="schedule-config hidden">
+                <!-- 调度配置将根据选择动态显示 -->
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">保存</button>
+                <button type="button" onclick="backupManager.closeBackupDialog()" class="btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/data/backup.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/data/backup.js') }}"></script>
+{% endblock %} 

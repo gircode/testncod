@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>测试邮件</h2>
+<p>您好,</p>
+<p>这是一封来自 {{ project_name }} 的测试邮件。</p>
+<p>如果您收到这封邮件，说明邮件系统配置正确。</p>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+        <tr>
+            <td>发送时间：</td>
+            <td><strong>{% now "Y-m-d H:i:s" %}</strong></td>
+        </tr>
+        <tr>
+            <td>接收邮箱：</td>
+            <td><strong>{{ email }}</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>您可以忽略这封邮件。</p>
+
+<p>祝好,<br>{{ project_name }} 团队</p>
+{% endblock %} 

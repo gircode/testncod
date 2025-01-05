@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}数据同步管理 - NCOD{% endblock %}
+
+{% block breadcrumb %}
+<span>数据管理</span> / <span>数据同步</span>
+{% endblock %}
+
+{% block content %}
+<div class="sync-page">
+    <div class="page-header">
+        <h1>数据同步管理</h1>
+        <div class="actions">
+            <button onclick="syncManager.createSync()" class="btn-primary">新建同步</button>
+            <button onclick="syncManager.showBatchActions()" class="btn-secondary">批量操作</button>
+        </div>
+    </div>
+
+    <div class="sync-overview">
+        <div class="overview-card">
+            <h3>同步状态</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="label">运行中</span>
+                    <span class="value running">{{ stats.running }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">等待中</span>
+                    <span class="value pending">{{ stats.pending }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">已完成</span>
+                    <span class="value completed">{{ stats.completed }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">失败</span>
+                    <span class="value failed">{{ stats.failed }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="overview-card">
+            <h3>同步性能</h3>
+            <div class="performance-stats">
+                <div class="stat-item">
+                    <span class="label">平均速度</span>
+                    <span class="value">{{ stats.avg_speed }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">总数据量</span>
+                    <span class="value">{{ stats.total_data }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">成功率</span>
+                    <span class="value">{{ stats.success_rate }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sync-list">
+        <div class="list-header">
+            <h2>同步列表</h2>
+            <div class="list-filters">
+                <select id="sourceFilter" title="源节点筛选">
+                    <option value="all">所有源节点</option>
+                    {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                    {% endfor %}
+                </select>
+                <select id="targetFilter" title="目标节点筛选">
+                    <option value="all">所有目标节点</option>
+                    {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                    {% endfor %}
+                </select>
+                <select id="statusFilter" title="状态筛选">
+                    <option value="all">所有状态</option>
+                    <option value="running">运行中</option>
+                    <option value="pending">等待中</option>
+                    <option value="completed">已完成</option>
+                    <option value="failed">失败</option>
+                </select>
+                <div class="date-range">
+                    <label>开始日期：</label>
+                    <input type="date" id="startDate" title="开始日期">
+                    <label>结束日期：</label>
+                    <input type="date" id="endDate" title="结束日期">
+                </div>
+            </div>
+        </div>
+
+        <div class="sync-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" title="全选" onchange="syncManager.toggleSelectAll(this)"></th>
+                        <th>ID</th>
+                        <th>源节点</th>
+                        <th>目标节点</th>
+                        <th>数据类型</th>
+                        <th>状态</th>
+                        <th>进度</th>
+                        <th>开始时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="syncTableBody">
+                    <!-- 同步列表将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <!-- 分页控件将通过JavaScript动态加载 -->
+        </div>
+    </div>
+</div>
+
+<!-- 同步配置对话框 -->
+<div id="syncDialog" class="modal">
+    <div class="modal-content">
+        <h3>同步配置</h3>
+        <form id="syncForm">
+            <div class="form-group">
+                <label for="sourceNode">源节点</label>
+                <select id="sourceNode" name="source_node" required title="选择源节点">
+                    {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="targetNode">目标节点</label>
+                <select id="targetNode" name="target_node" required title="选择目标节点">
+                    {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dataType">数据类型</label>
+                <select id="dataType" name="data_type" required title="选择数据类型">
+                    <option value="full">全量数据</option>
+                    <option value="incremental">增量数据</option>
+                    <option value="custom">自定义</option>
+                </select>
+            </div>
+            <div id="customDataConfig" class="custom-data-config hidden">
+                <div class="form-group">
+                    <label for="customQuery">自定义查询</label>
+                    <textarea id="customQuery" name="custom_query" rows="4" title="输入自定义查询语句"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="schedule">执行计划</label>
+                <select id="schedule" name="schedule" required title="选择执行计划">
+                    <option value="immediate">立即执行</option>
+                    <option value="scheduled">定时执行</option>
+                    <option value="recurring">周期执行</option>
+                </select>
+            </div>
+            <div id="scheduleConfig" class="schedule-config hidden">
+                <!-- 调度配置将根据选择动态显示 -->
+            </div>
+            <div class="form-group">
+                <label for="priority">优先级</label>
+                <select id="priority" name="priority" required title="选择优先级">
+                    <option value="high">高</option>
+                    <option value="normal">中</option>
+                    <option value="low">低</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">保存</button>
+                <button type="button" onclick="syncManager.closeSyncDialog()" class="btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/data/sync.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/data/sync.js') }}"></script>
+{% endblock %} 

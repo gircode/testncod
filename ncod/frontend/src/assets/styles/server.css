@@ -1,0 +1,146 @@
+.server-view {
+  padding: 20px;
+}
+
+.filter-bar {
+  margin-bottom: 20px;
+}
+
+.status-overview {
+  margin-bottom: 20px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-content {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.card-content.success {
+  color: #67C23A;
+}
+
+.card-content.warning {
+  color: #E6A23C;
+}
+
+.card-content.danger {
+  color: #F56C6C;
+}
+
+.chart-card {
+  margin-bottom: 20px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-header span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart {
+  height: 300px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.dashboard-item {
+  text-align: center;
+}
+
+.gauge-chart {
+  height: 200px;
+}
+
+.gauge-label {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #606266;
+}
+
+.network-info {
+  display: flex;
+  gap: 20px;
+}
+
+.network-info span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.system-info {
+  display: flex;
+  gap: 20px;
+}
+
+.system-status {
+  padding: 20px;
+}
+
+.status-item {
+  text-align: center;
+}
+
+.status-label {
+  margin-bottom: 10px;
+  color: #606266;
+}
+
+.status-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #303133;
+}
+
+.status-value small {
+  font-size: 14px;
+  font-weight: normal;
+  color: #909399;
+}
+
+.status-subvalue {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #909399;
+}
+
+.temperature-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.server-list {
+  margin-top: 20px;
+}
+
+.dialog-footer {
+  padding: 20px 0 0;
+  text-align: right;
+} 

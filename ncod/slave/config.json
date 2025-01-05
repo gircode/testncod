@@ -1,0 +1,30 @@
+{
+    "master_url": "http://localhost:8000",
+    "slave_id": "slave-001",
+    "name": "Slave Server 1",
+    "description": "First slave server instance",
+    "log_level": "INFO",
+    "log_file": "logs/slave.log",
+    "metrics": {
+        "collection_interval": 60,
+        "system_metrics": true,
+        "device_metrics": true
+    },
+    "heartbeat": {
+        "interval": 30,
+        "timeout": 10
+    },
+    "sync": {
+        "interval": 60,
+        "retry_count": 3,
+        "retry_delay": 5
+    },
+    "security": {
+        "api_key": "",
+        "ssl_verify": true
+    },
+    "devices": {
+        "auto_discovery": true,
+        "scan_interval": 300
+    }
+} 

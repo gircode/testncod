@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  master:
+    build: ./master
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    
+  slave:
+    build: ./slave
+    network_mode: host
+    
+  postgres:
+    image: postgres:14
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    
+  redis:
+    image: redis:6
+    volumes:
+      - redis_data:/data
+
+volumes:
+  pg_data:
+  redis_data: 

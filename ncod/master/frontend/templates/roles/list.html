@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}角色权限管理 - NCOD{% endblock %}
+
+{% block breadcrumb %}
+<span>系统管理</span> / <span>角色权限</span>
+{% endblock %}
+
+{% block content %}
+<div class="roles-page">
+    <div class="page-header">
+        <h1>角色权限管理</h1>
+        <div class="actions">
+            <button onclick="roleManager.createRole()" class="btn-primary">新建角色</button>
+            <button onclick="roleManager.showBatchActions()" class="btn-secondary">批量操作</button>
+        </div>
+    </div>
+
+    <div class="roles-overview">
+        <div class="overview-card">
+            <h3>角色概览</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="label">总角色数</span>
+                    <span class="value">{{ stats.total_roles }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">系统角色</span>
+                    <span class="value">{{ stats.system_roles }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">自定义角色</span>
+                    <span class="value">{{ stats.custom_roles }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">未分配用户</span>
+                    <span class="value">{{ stats.unassigned_users }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="overview-card">
+            <h3>权限分布</h3>
+            <div class="permission-distribution">
+                <canvas id="permissionDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="roles-list">
+        <div class="list-header">
+            <div class="list-filters">
+                <select id="typeFilter" title="角色类型筛选">
+                    <option value="all">所有类型</option>
+                    <option value="system">系统角色</option>
+                    <option value="custom">自定义角色</option>
+                </select>
+                <select id="statusFilter" title="状态筛选">
+                    <option value="all">所有状态</option>
+                    <option value="active">启用</option>
+                    <option value="inactive">禁用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="roles-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" title="全选" onchange="roleManager.toggleSelectAll(this)"></th>
+                        <th>ID</th>
+                        <th>角色名称</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>用户数</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="rolesTableBody">
+                    <!-- 角色列表将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <!-- 分页控件将通过JavaScript动态加载 -->
+        </div>
+    </div>
+</div>
+
+<!-- 角色编辑对话框 -->
+<div id="roleDialog" class="modal">
+    <div class="modal-content">
+        <h3>角色信息</h3>
+        <form id="roleForm">
+            <div class="form-group">
+                <label for="roleName">角色名称</label>
+                <input type="text" id="roleName" name="name" required pattern="[a-zA-Z0-9_-]{2,20}" title="2-20个字符，只能包含字母、数字、下划线和连字符">
+            </div>
+            <div class="form-group">
+                <label for="roleDesc">角色描述</label>
+                <textarea id="roleDesc" name="description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="roleType">角色类型</label>
+                <select id="roleType" name="type" required>
+                    <option value="custom">自定义角色</option>
+                    <option value="system">系统角色</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="roleStatus">状态</label>
+                <select id="roleStatus" name="status" required>
+                    <option value="active">启用</option>
+                    <option value="inactive">禁用</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>权限设置</label>
+                <div class="permission-tree">
+                    {% for module in permissions %}
+                    <div class="module-item">
+                        <label>
+                            <input type="checkbox" name="permissions[]" value="{{ module.id }}" class="module-checkbox">
+                            {{ module.name }}
+                        </label>
+                        <div class="permission-list">
+                            {% for perm in module.permissions %}
+                            <label>
+                                <input type="checkbox" name="permissions[]" value="{{ perm.id }}" class="permission-checkbox">
+                                {{ perm.name }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">保存</button>
+                <button type="button" onclick="roleManager.closeRoleDialog()" class="btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 批量操作对话框 -->
+<div id="batchActionDialog" class="modal">
+    <div class="modal-content">
+        <h3>批量操作</h3>
+        <div class="batch-actions">
+            <button onclick="roleManager.batchSetStatus('active')" class="btn-success">批量启用</button>
+            <button onclick="roleManager.batchSetStatus('inactive')" class="btn-warning">批量禁用</button>
+            <button onclick="roleManager.batchDelete()" class="btn-danger">批量删除</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/roles/list.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', path='js/roles/list.js') }}"></script>
+{% endblock %} 

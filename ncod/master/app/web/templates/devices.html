@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}设备管理 - NCOD{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- 页面标题 -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">设备管理</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeviceModal">
+                <i class="fas fa-plus"></i> 添加设备
+            </button>
+        </div>
+    </div>
+    
+    <!-- 设备组列表 -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">设备组</h5>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action active">
+                            全部设备
+                            <span class="badge bg-secondary float-end">{{ devices|length }}</span>
+                        </a>
+                        {% for group in groups %}
+                        <a href="#" class="list-group-item list-group-item-action">
+                            {{ group.name }}
+                            <span class="badge bg-secondary float-end">{{ group.device_count }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+                        <i class="fas fa-plus"></i> 添加分组
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 设备列表 -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>MAC地址</th>
+                                    <th>IP地址</th>
+                                    <th>状态</th>
+                                    <th>最后在线</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for device in devices %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('web.device_detail', device_id=device.id) }}">
+                                            {{ device.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ device.mac_address }}</td>
+                                    <td>{{ device.ip_address }}</td>
+                                    <td>
+                                        <span class="badge {% if device.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {{ "在线" if device.is_active else "离线" }}
+                                        </span>
+                                    </td>
+                                    <td>{{ device.last_seen|datetime }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editDeviceModal" data-device-id="{{ device.id }}" title="编辑设备">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteDeviceModal" data-device-id="{{ device.id }}" title="删除设备">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加设备模态框 -->
+<div class="modal fade" id="addDeviceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">添加设备</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="关闭"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addDeviceForm">
+                    <div class="mb-3">
+                        <label class="form-label" for="device_name">设备名称</label>
+                        <input type="text" class="form-control" id="device_name" name="name" required title="请输入设备名称" placeholder="请输入设备名称">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="device_mac">MAC地址</label>
+                        <input type="text" class="form-control" id="device_mac" name="mac_address" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" title="请输入有效的MAC地址,格式如:AA:BB:CC:DD:EE:FF" placeholder="请输入MAC地址">
+                    </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="device_ip">IP地址</label>
+                        <input type="text" class="form-control" id="device_ip" name="ip_address" pattern="^(\d{1,3}\.){3}\d{1,3}$" title="请输入有效的IP地址,格式如:192.168.1.1" placeholder="请输入IP地址">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="device_vh_id">VirtualHere ID</label>
+                        <input type="text" class="form-control" id="device_vh_id" name="virtualhere_id" title="请输入VirtualHere ID" placeholder="请输入VirtualHere ID">
+                    </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="device_group">设备组</label>
+                        <select class="form-select" name="group_id" id="device_group" title="请选择设备组">
+                            <option value="">无</option>
+                            {% for group in groups %}
+                            <option value="{{ group.id }}">{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="addDevice()">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑设备模态框 -->
+<div class="modal fade" id="editDeviceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑设备</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="关闭"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editDeviceForm">
+                    <input type="hidden" name="device_id">
+                    <div class="mb-3">
+                        <label class="form-label" for="edit_device_name">设备名称</label>
+                        <input type="text" class="form-control" id="edit_device_name" name="name" required title="请输入设备名称" placeholder="请输入设备名称">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit_device_mac">MAC地址</label>
+                        <input type="text" class="form-control" id="edit_device_mac" name="mac_address" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" title="请输入有效的MAC地址,格式如:AA:BB:CC:DD:EE:FF" placeholder="请输入MAC地址">
+                    </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit_device_ip">IP地址</label>
+                        <input type="text" class="form-control" id="edit_device_ip" name="ip_address" pattern="^(\d{1,3}\.){3}\d{1,3}$" title="请输入有效的IP地址,格式如:192.168.1.1" placeholder="请输入IP地址">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit_device_vh_id">VirtualHere ID</label>
+                        <input type="text" class="form-control" id="edit_device_vh_id" name="virtualhere_id" title="请输入VirtualHere ID" placeholder="请输入VirtualHere ID">
+                    </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit_device_group">设备组</label>
+                        <select class="form-select" name="group_id" id="edit_device_group" title="请选择设备组">
+                            <option value="">无</option>
+                            {% for group in groups %}
+                            <option value="{{ group.id }}">{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="updateDevice()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 删除设备模态框 -->
+<div class="modal fade" id="deleteDeviceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">删除设备</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="关闭"></button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除这个设备吗？此操作无法撤销。</p>
+                <input type="hidden" name="device_id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" onclick="deleteDevice()">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加设备组模态框 -->
+<div class="modal fade" id="addGroupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">添加设备组</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="关闭"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addGroupForm">
+                    <div class="mb-3">
+                        <label class="form-label" for="group_name">组名称</label>
+                        <input type="text" class="form-control" id="group_name" name="name" required title="请输入组名称" placeholder="请输入组名称">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="group_description">描述</label>
+                        <textarea class="form-control" id="group_description" name="description" rows="3" title="请输入描述信息" placeholder="请输入描述信息"></textarea>
+                    </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="addGroup()">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 添加设备
+function addDevice() {
+    var form = $('#addDeviceForm');
+    var data = {
+        name: form.find('[name="name"]').val(),
+        mac_address: form.find('[name="mac_address"]').val(),
+        ip_address: form.find('[name="ip_address"]').val(),
+        virtualhere_id: form.find('[name="virtualhere_id"]').val(),
+        group_id: form.find('[name="group_id"]').val()
+    };
+    
+    $.ajax({
+        url: "{{ url_for('web.devices') }}",
+        method: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(response) {
+            location.reload();
+        },
+        error: function(xhr) {
+            alert('添加设备失败: ' + xhr.responseText);
+        }
+    });
+}
+
+// 更新设备
+function updateDevice() {
+    var form = $('#editDeviceForm');
+    var deviceId = form.find('[name="device_id"]').val();
+    var data = {
+        name: form.find('[name="name"]').val(),
+        mac_address: form.find('[name="mac_address"]').val(),
+        ip_address: form.find('[name="ip_address"]').val(),
+        virtualhere_id: form.find('[name="virtualhere_id"]').val(),
+        group_id: form.find('[name="group_id"]').val()
+    };
+    
+    $.ajax({
+        url: "{{ url_for('web.devices') }}/" + deviceId,
+        method: 'PUT',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(response) {
+            location.reload();
+        },
+        error: function(xhr) {
+            alert('更新设备失败: ' + xhr.responseText);
+        }
+    });
+}
+
+// 删除设备
+function deleteDevice() {
+    var deviceId = $('#deleteDeviceModal').find('[name="device_id"]').val();
+    
+    $.ajax({
+        url: "{{ url_for('web.devices') }}/" + deviceId,
+        method: 'DELETE',
+        success: function(response) {
+            location.reload();
+        },
+        error: function(xhr) {
+            alert('删除设备失败: ' + xhr.responseText);
+        }
+    });
+}
+
+// 添加设备组
+function addGroup() {
+    var form = $('#addGroupForm');
+    var data = {
+        name: form.find('[name="name"]').val(),
+        description: form.find('[name="description"]').val()
+    };
+    
+    $.ajax({
+        url: "{{ url_for('web.devices') }}/group",
+        method: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(response) {
+            location.reload();
+        },
+        error: function(xhr) {
+            alert('添加设备组失败: ' + xhr.responseText);
+        }
+    });
+}
+
+// 编辑设备模态框事件
+$('#editDeviceModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deviceId = button.data('device-id');
+    var modal = $(this);
+    
+    $.get("{{ url_for('web.devices') }}/" + deviceId, function(device) {
+        modal.find('[name="device_id"]').val(device.id);
+        modal.find('[name="name"]').val(device.name);
+        modal.find('[name="mac_address"]').val(device.mac_address);
+        modal.find('[name="ip_address"]').val(device.ip_address);
+        modal.find('[name="virtualhere_id"]').val(device.virtualhere_id);
+        modal.find('[name="group_id"]').val(device.group_id);
+    });
+});
+
+// 删除设备模态框事件
+$('#deleteDeviceModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var deviceId = button.data('device-id');
+    var modal = $(this);
+    modal.find('[name="device_id"]').val(deviceId);
+});
+</script>
+{% endblock %} 

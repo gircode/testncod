@@ -1,0 +1,150 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+    background: #2c3e50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #fff;
+}
+
+/* 登录容器 */
+.login-container {
+    background: rgba(44, 62, 80, 0.95);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    color: #3498db;
+}
+
+/* 输入框组 */
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* 验证码组 */
+.captcha-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.captcha-image {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.captcha-image img {
+    height: 40px;
+    border-radius: 5px;
+}
+
+.refresh-btn {
+    padding: 0.3rem 0.8rem;
+    background: #3498db;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background: #2980b9;
+}
+
+/* 登录按钮 */
+.login-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: #3498db;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #2980b9;
+}
+
+/* 错误消息 */
+.error-message {
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    text-align: center;
+    min-height: 1.2rem;
+}
+
+/* 底部链接 */
+.bottom-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.bottom-links a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.bottom-links a:hover {
+    color: #2980b9;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .captcha-group {
+        flex-direction: column;
+    }
+} 

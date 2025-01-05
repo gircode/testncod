@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}仪表盘 - NCOD{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- 状态卡片 -->
+    <div class="row">
+        <!-- CPU使用率 -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">CPU使用率</h5>
+                    <h2 class="card-text">
+                        {% set cpu_metric = metrics|selectattr("name", "equalto", "cpu_usage")|first %}
+                        {{ "%.1f"|format(cpu_metric.value|default(0)) }}%
+                    </h2>
+                    <div class="progress">
+                        <div class="progress-bar {% if cpu_metric.value > 90 %}bg-danger{% elif cpu_metric.value > 70 %}bg-warning{% else %}bg-success{% endif %}"
+                            role="progressbar"
+                            style="width: {{ cpu_metric.value|default(0) }}%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 内存使用率 -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">内存使用率</h5>
+                    <h2 class="card-text">
+                        {% set memory_metric = metrics|selectattr("name", "equalto", "memory_usage")|first %}
+                        {{ "%.1f"|format(memory_metric.value|default(0)) }}%
+                    </h2>
+                    <div class="progress">
+                        <div class="progress-bar {% if memory_metric.value > 90 %}bg-danger{% elif memory_metric.value > 70 %}bg-warning{% else %}bg-success{% endif %}"
+                            role="progressbar"
+                            style="width: {{ memory_metric.value|default(0) }}%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 磁盘使用率 -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">磁盘使用率</h5>
+                    <h2 class="card-text">
+                        {% set disk_metric = metrics|selectattr("name", "equalto", "disk_usage")|first %}
+                        {{ "%.1f"|format(disk_metric.value|default(0)) }}%
+                    </h2>
+                    <div class="progress">
+                        <div class="progress-bar {% if disk_metric.value > 90 %}bg-danger{% elif disk_metric.value > 70 %}bg-warning{% else %}bg-success{% endif %}"
+                            role="progressbar"
+                            style="width: {{ disk_metric.value|default(0) }}%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 设备数量 -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">设备数量</h5>
+                    <h2 class="card-text">
+                        {{ devices|length }}
+                    </h2>
+                    <div class="text-muted">
+                        在线: {{ devices|selectattr("is_active", "equalto", true)|list|length }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 告警列表 -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">最新告警</h5>
+                    {% if alerts %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>级别</th>
+                                    <th>消息</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alert in alerts %}
+                                <tr>
+                                    <td>{{ alert.timestamp|datetime }}</td>
+                                    <td>
+                                        <span class="badge {% if alert.level == 'warning' %}bg-warning{% else %}bg-danger{% endif %}">
+                                            {{ alert.level }}
+                                        </span>
+                                    </td>
+                                    <td>{{ alert.message }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">暂无告警</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- 设备列表 -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">最新设备</h5>
+                    {% if devices %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>状态</th>
+                                    <th>最后在线</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for device in devices %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('web.device_detail', device_id=device.id) }}">
+                                            {{ device.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if device.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {{ "在线" if device.is_active else "离线" }}
+                                        </span>
+                                    </td>
+                                    <td>{{ device.last_seen|datetime }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">暂无设备</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 性能图表 -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">性能趋势</h5>
+                    <div id="performanceChart" class="chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 初始化图表
+var chart = echarts.init(document.getElementById('performanceChart'));
+
+// 图表配置
+var option = {
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: ['CPU使用率', '内存使用率', '磁盘使用率']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: []
+    },
+    yAxis: {
+        type: 'value',
+        min: 0,
+        max: 100,
+        axisLabel: {
+            formatter: '{value}%'
+        }
+    },
+    series: [
+        {
+            name: 'CPU使用率',
+            type: 'line',
+            data: []
+        },
+        {
+            name: '内存使用率',
+            type: 'line',
+            data: []
+        },
+        {
+            name: '磁盘使用率',
+            type: 'line',
+            data: []
+        }
+    ]
+};
+
+// 设置图表配置
+chart.setOption(option);
+
+// 自动调整大小
+window.addEventListener('resize', function() {
+    chart.resize();
+});
+
+// 定时更新数据
+function updateChart() {
+    $.get("{{ url_for('web.monitor_metrics') }}", function(data) {
+        var timestamps = [];
+        var cpuData = [];
+        var memoryData = [];
+        var diskData = [];
+        
+        data.forEach(function(metric) {
+            if (metric.name === 'cpu_usage') {
+                timestamps.push(new Date(metric.timestamp).toLocaleTimeString());
+                cpuData.push(metric.value);
+            } else if (metric.name === 'memory_usage') {
+                memoryData.push(metric.value);
+            } else if (metric.name === 'disk_usage') {
+                diskData.push(metric.value);
+            }
+        });
+        
+        chart.setOption({
+            xAxis: {
+                data: timestamps
+            },
+            series: [
+                {
+                    name: 'CPU使用率',
+                    data: cpuData
+                },
+                {
+                    name: '内存使用率',
+                    data: memoryData
+                },
+                {
+                    name: '磁盘使用率',
+                    data: diskData
+                }
+            ]
+        });
+    });
+}
+
+// 每60秒更新一次数据
+setInterval(updateChart, 60000);
+updateChart();
+</script>
+{% endblock %} 

@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: NCOD API
+  version: 1.0.0
+
+paths:
+  /api/v1/auth:
+    post:
+      summary: 用户认证
+      tags: [认证]
+  
+  /api/v1/devices:
+    get:
+      summary: 获取设备列表
+      tags: [设备]
+    
+  /api/v1/slaves:
+    get:
+      summary: 获取从服务器列表
+      tags: [从服务器]
+
+  /api/v1/monitor:
+    post:
+      summary: 上报监控数据
+      tags: [监控] 

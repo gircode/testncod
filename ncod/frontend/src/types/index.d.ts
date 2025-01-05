@@ -1,0 +1,5 @@
+declare module '@/router'
+declare module '@/utils/auth'
+declare module '@/utils/http'
+declare module '@/utils/performance'
+declare module '@/types/*' 
